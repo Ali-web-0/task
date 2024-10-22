@@ -9,7 +9,7 @@ import { WebsocketModule } from './modules/websocket/websocket.module';
       envFilePath: `.env`,
       isGlobal: true,
     }),
-    MongooseModule.forRoot('mongodb+srv://admin:ysEbv3wOsutF9zUl@cluster1.7xsfezu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1'),  // Connect to MongoDB
+    MongooseModule.forRoot(process.env.mongodbUrl),  // Connect to MongoDB
     WebsocketModule,
   ],
 })

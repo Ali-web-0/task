@@ -3,11 +3,11 @@ import { Container, Typography, Box } from '@mui/material';
 import useWebSocket from '../hooks/useWebSocket';
 import WebSocketConnection from '../components/WebSocketConnection';
 import MessageList from '../components/MessageList';
+import { config } from '../config';
 
 const Home: React.FC = () => {
- 
   const { messages, sendMessage, connectionStatus } = useWebSocket(
-    'http://localhost:3000'
+    config?.baseUrl
   );
 
   return (

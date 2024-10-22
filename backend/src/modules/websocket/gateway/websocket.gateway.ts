@@ -11,7 +11,8 @@ import { Server, Socket } from 'socket.io';
 import { WebsocketService } from '../services/websocket.service';
 import { CreateMessageDto } from '../dto/create-message.dto';
 
-@WebSocketGateway({ cors: { origin: 'http://localhost:3001' } })
+
+@WebSocketGateway({ cors: true })
 export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
 

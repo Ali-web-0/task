@@ -1,14 +1,18 @@
 import React from 'react';
 import { List, ListItem, Box, Typography } from '@mui/material';
 import { styled } from '@mui/system';
-import { User } from '../types/WebSocketTypes';
+
+interface Message {
+  content: string;
+  isUser: boolean;
+}
 
 interface Props {
-  messages: User[];
+  messages: Message[];
 }
 
 const Triangle = styled('div')<{ isUserMessage: boolean }>(
-  ({ isUserMessage }) => ({
+  ({ theme, isUserMessage }) => ({
     content: '""', // Required for pseudo-elements
     position: 'absolute',
     width: 0,
@@ -25,11 +29,35 @@ const Triangle = styled('div')<{ isUserMessage: boolean }>(
   })
 );
 
+const CustomList = styled(List)(() => ({
+  '&::-webkit-scrollbar': {
+    width: '1px',
+  },
+  '&::-webkit-scrollbar-track': {
+    background: '#888',
+  },
+  '&::-webkit-scrollbar-thumb': {
+    background: '#E0E0E0',
+    borderRadius: '6px',
+  },
+  '&::-webkit-scrollbar-thumb:hover': {
+    background: '#555',
+  },
+}));
+
 const MessageList: React.FC<Props> = ({ messages }) => {
   return (
-    <List sx={{ mt: 4, maxHeight: '400px', overflow: 'auto', p: 0 }}>
+    <CustomList
+      sx={{
+        mt: 4,
+        maxHeight: '300px',
+        height: '300px',
+        overflow: 'auto',
+        p: 0,
+      }}
+    >
       {messages.map((message, index) => {
-        const isUserMessage = message.isUser; // Assuming you have a field to identify user messages
+        const isUserMessage = message.isUser;
         return (
           <ListItem
             key={index}
@@ -61,7 +89,7 @@ const MessageList: React.FC<Props> = ({ messages }) => {
           </ListItem>
         );
       })}
-    </List>
+    </CustomList>
   );
 };
 
