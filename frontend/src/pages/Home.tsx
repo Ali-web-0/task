@@ -5,8 +5,9 @@ import WebSocketConnection from '../components/WebSocketConnection';
 import MessageList from '../components/MessageList';
 
 const Home: React.FC = () => {
+ 
   const { messages, sendMessage, connectionStatus } = useWebSocket(
-    'ws://localhost:3000'
+    'http://localhost:3000'
   );
 
   return (
@@ -15,10 +16,13 @@ const Home: React.FC = () => {
         Real-Time WebSocket Chat
       </Typography>
       <Box>
-        <WebSocketConnection sendMessage={sendMessage} />
         <MessageList messages={messages} />
+        <WebSocketConnection sendMessage={sendMessage} />
       </Box>
-      <Typography align="center" color="error">
+      <Typography
+        align="center"
+        color={connectionStatus === 'open' ? 'green' : 'error'}
+      >
         Connection Status: {connectionStatus}
       </Typography>
     </Container>

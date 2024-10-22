@@ -19,7 +19,7 @@ const WebSocketConnection: React.FC<Props> = ({ sendMessage }) => {
     <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
       <TextField
         label="Message"
-        variant="outlined"
+        variant="filled"
         fullWidth
         value={input}
         onChange={(e) => setInput(e.target.value)}

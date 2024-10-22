@@ -22,7 +22,6 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     }
 
     handleConnection(client: Socket) {
-        console.log(client)
         console.log(`Client connected: ${client.id}`);
     }
 
@@ -32,7 +31,8 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
 
     @SubscribeMessage('message')
     async handleMessage(@MessageBody() createMessageDto: CreateMessageDto): Promise<void> {
-        const processedMessage = await this.websocketService.processData(createMessageDto);
+        const modifiedMessage = { ...createMessageDto, content: createMessageDto.content.toUpperCase() };
+        const processedMessage = await this.websocketService.processData(modifiedMessage);
         this.server.emit('processedData', processedMessage);
     }
 }

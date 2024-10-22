@@ -1,51 +1,47 @@
 import { useState, useEffect } from 'react';
+import { io, Socket } from 'socket.io-client';
 
 const useWebSocket = (url: string) => {
-    const [socket, setSocket] = useState<WebSocket | null>(null);
+    const [socket, setSocket] = useState<Socket | null>(null);
     const [messages, setMessages] = useState<any[]>([]);
     const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'open' | 'closed'>('connecting');
 
     useEffect(() => {
-        const newSocket = new WebSocket(url);
+        const newSocket = io(url); 
 
-        newSocket.onopen = () => {
-            console.log('WebSocket connected');
+        newSocket.on('connect', () => {
+            console.log('Socket.IO connected');
             setConnectionStatus('open');
-        };
+        });
 
-        newSocket.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                console.log('Received message:', data);
-                setMessages((prevMessages) => [...prevMessages, data]);
-            } catch (err) {
-                console.error('Error parsing WebSocket message', err);
-            }
-        };
-
-        newSocket.onerror = (error) => {
-            console.error('WebSocket error:', error);
-            setConnectionStatus('closed'); // Update status if there's an error
-        };
-
-        newSocket.onclose = () => {
-            console.log('WebSocket disconnected');
+        newSocket.on('disconnect', () => {
+            console.log('Socket.IO disconnected');
             setConnectionStatus('closed');
-        };
+        });
+
+        newSocket.on('processedData', (data: any) => {
+            console.log('Received message:', data);
+            setMessages((prevMessages) => [...prevMessages, data]);
+        });
+
+        newSocket.on('connect_error', (err) => {
+            console.error('Connection error:', err);
+            setConnectionStatus('closed');
+        });
 
         setSocket(newSocket);
 
         return () => {
-            newSocket.close();
+            newSocket.disconnect();
         };
     }, [url]);
 
     const sendMessage = (message: object) => {
-        if (socket && socket.readyState === WebSocket.OPEN) {
+        if (socket && socket.connected) {
             console.log('Sending message:', message);
-            socket.send(JSON.stringify(message));
+            socket.emit('message', message);
         } else {
-            console.error('WebSocket is not open, cannot send message');
+            console.error('Socket.IO is not open, cannot send message');
         }
     };
 
